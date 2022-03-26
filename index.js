@@ -22,22 +22,20 @@ const checkGameOver = () => {
       diamond.classList.remove('active');
     });
 
-    if (Object.values(diamondValues).indexOf(10) === 0) {
-      scores[0].classList.add('winner');
-    }
-    if (Object.values(diamondValues).indexOf(10) === 1) {
-      scores[1].classList.add('winner');
-    }
-    if (Object.values(diamondValues).indexOf(10) === 2) {
-      scores[2].classList.add('winner');
-    }
-    if (Object.values(diamondValues).indexOf(10) === 3) {
-      scores[3].classList.add('winner');
-    }
+    diamonds.forEach((diamond) => {
+      const diamondArray = Array.from(document.querySelectorAll('.diamond'));
+      if (
+        Object.values(diamondValues).indexOf(10) ===
+        diamondArray.indexOf(diamond)
+      ) {
+        console.log(diamondArray.indexOf(diamond));
+        scores[diamondArray.indexOf(diamond)].classList.add('winner');
+      }
+    });
   }
 };
 
-//
+//Check for game over, if false change value and position of diamond when clicked
 const diamondClicked = (color) => {
   if (!isGameOver) {
     diamondValues[color] += 1;
