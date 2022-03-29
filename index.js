@@ -3,95 +3,74 @@ const diamonds = document.querySelectorAll('.diamond');
 const scores = document.querySelectorAll('.score-value');
 const resetBtn = document.querySelector('.reset-btn');
 
-//Initialize starting values
-let diamondValues = {
-  red: 0,
-  blue: 0,
-  green: 0,
-  yellow: 0,
-};
+let diamondProps = [
+  {
+    color: 'red',
+    value: 0,
+  },
+  {
+    color: 'blue',
+    value: 0,
+  },
+  {
+    color: 'green',
+    value: 0,
+  },
+  {
+    color: 'yellow',
+    value: 0,
+  },
+];
 
 let isGameOver = false;
 
 //Check if any diamond has reached a value of 10
 const checkGameOver = () => {
-  if (Object.values(diamondValues).indexOf(10) > -1) {
-    isGameOver = true;
+  diamondProps.forEach((d, i) => {
+    if (Object.values(d).indexOf(10) > -1) {
+      isGameOver = true;
+      scores[i].classList.add('winner');
 
-    diamonds.forEach((diamond) => {
-      diamond.classList.remove('active');
-    });
-
-    diamonds.forEach((diamond) => {
-      const diamondArray = Array.from(document.querySelectorAll('.diamond'));
-      if (
-        Object.values(diamondValues).indexOf(10) ===
-        diamondArray.indexOf(diamond)
-      ) {
-        console.log(diamondArray.indexOf(diamond));
-        scores[diamondArray.indexOf(diamond)].classList.add('winner');
-      }
-    });
-  }
+      diamonds.forEach((diamond) => {
+        diamond.classList.remove('active');
+      });
+    }
+  });
 };
 
 //Check for game over, if false change value and position of diamond when clicked
 const diamondClicked = (color) => {
   if (!isGameOver) {
-    diamondValues[color] += 1;
+    diamondProps.forEach((diamond, i) => {
+      if (color === diamond.color) {
+        diamond.value += 1;
+        diamonds[i].style.left = `${diamond.value - 1}5.25%`;
+        scores[i].innerHTML = diamond.value;
+      }
+    });
 
-    if (color === 'red') {
-      diamonds[0].style.left = `${diamondValues[color] - 1}5.25%`;
-      scores[0].innerHTML = diamondValues[color];
-    }
-    if (color === 'blue') {
-      diamonds[1].style.left = `${diamondValues[color] - 1}5.25%`;
-      scores[1].innerHTML = diamondValues[color];
-    }
-    if (color === 'green') {
-      diamonds[2].style.left = `${diamondValues[color] - 1}5.25%`;
-      scores[2].innerHTML = diamondValues[color];
-    }
-    if (color === 'yellow') {
-      diamonds[3].style.left = `${diamondValues[color] - 1}5.25%`;
-      scores[3].innerHTML = diamondValues[color];
-    }
     checkGameOver();
   }
 };
 
 //Reset game
 const resetGame = () => {
-  Object.keys(diamondValues).forEach((key) => {
-    diamondValues[key] = 0;
-    return diamondValues;
-  });
-
-  diamonds.forEach((diamond) => {
-    diamond.style.left = 0;
-    diamond.classList.add('active');
-  });
-
-  scores.forEach((score) => {
-    score.innerHTML = 0;
-    score.classList.remove('winner');
+  diamondProps.forEach((diamond, i) => {
+    diamond.value = 0;
+    diamonds[i].style.left = 0;
+    diamonds[i].classList.add('active');
+    scores[i].innerHTML = 0;
+    scores[i].classList.remove('winner');
   });
 
   isGameOver = false;
 };
 
 //Add event listeners to DOM
-diamonds[0].addEventListener('click', () => {
-  diamondClicked('red');
-});
-diamonds[1].addEventListener('click', () => {
-  diamondClicked('blue');
-});
-diamonds[2].addEventListener('click', () => {
-  diamondClicked('green');
-});
-diamonds[3].addEventListener('click', () => {
-  diamondClicked('yellow');
+diamonds.forEach((diamond, i) => {
+  diamond.addEventListener('click', () => {
+    diamondClicked(diamondProps[i].color);
+  });
 });
 
 resetBtn.addEventListener('click', resetGame);
