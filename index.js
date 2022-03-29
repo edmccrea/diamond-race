@@ -27,7 +27,7 @@ let isGameOver = false;
 //Check if any diamond has reached a value of 10
 const checkGameOver = () => {
   diamondProps.forEach((d, i) => {
-    if (Object.values(d).indexOf(10) > -1) {
+    if (d.value === 10) {
       isGameOver = true;
       scores[i].classList.add('winner');
 
